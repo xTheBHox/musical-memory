@@ -2,7 +2,7 @@
 #include "Mode.hpp"
 
 //Starting mode:
-#include "StoryMode.hpp"
+#include "MatchMode.hpp"
 
 //Deal with calling resource loading functions:
 #include "Load.hpp"
@@ -99,7 +99,7 @@ int main(int argc, char **argv) {
 	call_load_functions();
 
 	//------------ create game mode + make current --------------
-	Mode::set_current(std::make_shared< StoryMode >());
+	Mode::set_current(std::make_shared< MatchMode >());
 
 	//------------ main loop ------------
 
@@ -170,7 +170,7 @@ int main(int argc, char **argv) {
 		}
 
 		{ //(3) call the current mode's "draw" function to produce output:
-		
+
 			Mode::current->draw(drawable_size);
 		}
 

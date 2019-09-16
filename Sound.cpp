@@ -36,12 +36,12 @@ void mix_audio(void *, Uint8 *buffer_, int len);
 //------------------------ public-facing --------------------------------
 
 Sound::Sample::Sample(std::string const &filename) {
-	if (filename.size() >= 4 && filename.substr(filename.size()-4) == ".png") {
+	if (filename.size() >= 4 && filename.substr(filename.size()-4) == ".wav") {
 		load_wav(filename, &data);
 	} else if (filename.size() >= 5 && filename.substr(filename.size()-5) == ".opus") {
 		load_opus(filename, &data);
 	} else {
-		throw std::runtime_error("Sample '" + filename + "' doesn't end in either \".png\" or \".opus\" -- unsure how to load.");
+		throw std::runtime_error("Sample '" + filename + "' doesn't end in either \".wav\" or \".opus\" -- unsure how to load.");
 	}
 }
 
@@ -243,5 +243,3 @@ void mix_audio(void *, Uint8 *buffer_, int len) {
 	*/
 
 }
-
-

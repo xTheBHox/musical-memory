@@ -10,12 +10,14 @@
 
 namespace Sound {
 
+static uint32_t SRATE = 48000;
+
 //Sample objects hold mono (one-channel) audio.
 struct Sample {
 	//Load from a '.wav' or '.opus' file.
 	//  will warn and convert if sound is not already 48kHz mono:
 	Sample(std::string const &filename);
-	
+
 	//Directly supply an audio buffer:
 	Sample(std::vector< float > const &data);
 
