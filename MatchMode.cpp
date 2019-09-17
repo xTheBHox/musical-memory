@@ -161,7 +161,8 @@ Load< std::vector< Sound::Sample const *> const > sounds(
   };
 
   std::mt19937 mt;
-  mt.seed(0);
+  //mt.seed(0);
+  mt.seed(static_cast<unsigned int>(time(NULL)));
 
   std::array< std::function< Sound::Sample *(float) >, 3 > const gens = {
     genSinTone,
@@ -272,8 +273,8 @@ Load< Sound::Sample const > snd_buzz(
 MatchMode::MatchMode() {
 
   std::mt19937 mt;
-  mt.seed(0);
-  //mt.seed(static_cast<unsigned int>(time(NULL)));
+  //mt.seed(0);
+  mt.seed(static_cast<unsigned int>(time(NULL)));
 
   std::vector< SDL_Keycode > pairings(*keys);
   std::shuffle(pairings.begin(), pairings.end(), mt);
