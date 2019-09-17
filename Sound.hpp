@@ -10,7 +10,7 @@
 
 namespace Sound {
 
-static uint32_t SRATE = 48000;
+uint32_t get_audio_rate(void);
 
 //Sample objects hold mono (one-channel) audio.
 struct Sample {

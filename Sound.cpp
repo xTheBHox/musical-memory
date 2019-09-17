@@ -35,6 +35,10 @@ void mix_audio(void *, Uint8 *buffer_, int len);
 
 //------------------------ public-facing --------------------------------
 
+uint32_t Sound::get_audio_rate() {
+  return AUDIO_RATE;
+}
+
 Sound::Sample::Sample(std::string const &filename) {
 	if (filename.size() >= 4 && filename.substr(filename.size()-4) == ".wav") {
 		load_wav(filename, &data);

@@ -11,7 +11,7 @@
 Load< Sound::Sample const > snd_intro(
   LoadTagLate, []() -> Sound::Sample const * {
 
-  return new Sound::Sample(data_path("sounds/intro.wav"));
+  return new Sound::Sample(data_path("sounds/intro.opus"));
 
 });
 
@@ -33,7 +33,7 @@ bool PreambleMode::handle_event(
     }
     return true;
   }
-  
+
   return false;
 }
 

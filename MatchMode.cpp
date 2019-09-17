@@ -110,7 +110,7 @@ Load< std::vector< Sound::Sample const *> const > sounds(
 
   // 1/duration
   float const dur_time = 0.25f;
-  uint32_t const dur_samples = (uint32_t) (Sound::SRATE * dur_time);
+  uint32_t const dur_samples = (uint32_t) (Sound::get_audio_rate() * dur_time);
 
   auto get_env = [&dur_time](float fr, float t) {
     float att_dur = 0.05f;
@@ -127,7 +127,7 @@ Load< std::vector< Sound::Sample const *> const > sounds(
   auto genSinTone = [&get_env, &dur_samples](float fr) {
   	std::vector< float > data(dur_samples, 0.0f);
   	for (uint32_t i = 0; i < data.size(); ++i) {
-  		float t = i / float(Sound::SRATE);
+  		float t = i / float(Sound::get_audio_rate());
   		//pure sine wave:
   		data[i] = std::sin(3.14159265358979f * 2.0f * fr * t);
   		//ramp up, ramp down:
@@ -139,7 +139,7 @@ Load< std::vector< Sound::Sample const *> const > sounds(
   auto genSawTone = [&get_env, &dur_samples](float fr) {
   	std::vector< float > data(dur_samples, 0.0f);
   	for (uint32_t i = 0; i < data.size(); ++i) {
-  		float t = i / float(Sound::SRATE);
+  		float t = i / float(Sound::get_audio_rate());
   		// sawtooth
   		data[i] = 2.0f * fr * fmod(t, 1.0f / fr) - 1.0f;
   		// ramp up, ramp down:
@@ -151,7 +151,7 @@ Load< std::vector< Sound::Sample const *> const > sounds(
   auto genSquTone = [&get_env, &dur_samples](float fr) {
   	std::vector< float > data(dur_samples, 0.0f);
   	for (uint32_t i = 0; i < data.size(); ++i) {
-  		float t = i / float(Sound::SRATE);
+  		float t = i / float(Sound::get_audio_rate());
   		// square wave:
   		data[i] = fr * fmod(t, 1.0f / fr) < 0.5 ? 0.0f : 1.0f;
   		// ramp up, ramp down:
@@ -188,7 +188,7 @@ Load< Sound::Sample const > snd_correct(
   LoadTagLate, []() -> Sound::Sample const * {
 
   float const dur_time = 0.4f;
-  uint32_t const dur_samples = (uint32_t) (dur_time * Sound::SRATE);
+  uint32_t const dur_samples = (uint32_t) (dur_time * Sound::get_audio_rate());
   float const fr1 = 800.0f;
   float const fr2 = 1000.0f;
 	std::vector< float > data(dur_samples, 0.0f);
@@ -216,7 +216,7 @@ Load< Sound::Sample const > snd_correct(
   };
 
 	for (uint32_t i = 0; i < data.size(); ++i) {
-		float t = i / float(Sound::SRATE);
+		float t = i / float(Sound::get_audio_rate());
 		// sin wave:
     data[i] =
       std::sin(3.14159265358979f * 2.0f * 1.0f * fr1 * t) +
@@ -237,7 +237,7 @@ Load< Sound::Sample const > snd_buzz(
   LoadTagLate, []() -> Sound::Sample const * {
 
   float const dur_time = 0.1f;
-  uint32_t const dur_samples = (uint32_t) (dur_time * Sound::SRATE);
+  uint32_t const dur_samples = (uint32_t) (dur_time * Sound::get_audio_rate());
   float const fr = 150.0f;
 	std::vector< float > data(dur_samples, 0.0f);
 
@@ -254,7 +254,7 @@ Load< Sound::Sample const > snd_buzz(
   };
 
 	for (uint32_t i = 0; i < data.size(); ++i) {
-		float t = i / float(Sound::SRATE);
+		float t = i / float(Sound::get_audio_rate());
 		// sin wave:
     data[i] =
       std::sin(3.14159265358979f * 2.0f * 1.0f * fr * t) +
