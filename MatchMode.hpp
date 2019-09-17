@@ -3,7 +3,7 @@
 
 #include <unordered_map>
 #include <vector>
-
+#include <string>
 #include <array>
 #include <cmath>
 #include <functional>
@@ -30,7 +30,11 @@ struct MatchMode : Mode {
   uint32_t wrong_count = 0;
   uint32_t correct_count = 0;
 
-  float countdown = 10.0f;
+  float countdown = 5.0f;
   bool countdown_start = false;
+
+  bool remain_getting = false;
+  std::vector< SDL_Keycode >::const_iterator remain_it;
+  std::shared_ptr< Sound::PlayingSample > remain_curr_sound;
 
 };

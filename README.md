@@ -14,6 +14,7 @@ How To Play:
 
 Sources:
 
+All speech was obtained using https://www.text2speech.org/
 (TODO: fill in information about the sources of any **artwork** or **sounds** you used in the game that you did not create yourself. Feel free to also credit yourself for things you did make.)
 
 This game was built with [NEST](NEST.md).

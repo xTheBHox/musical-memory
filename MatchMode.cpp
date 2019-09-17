@@ -9,37 +9,37 @@
 
 static const uint32_t COUNT_PAIRS = 13;
 
-Load< std::vector< SDL_Keycode > > keys(
+Load< std::vector< SDL_Keycode > const > keys(
   LoadTagLate, []() -> std::vector< SDL_Keycode > const * {
 	std::vector< SDL_Keycode > *ret =
     new std::vector< SDL_Keycode >();
 
-	ret->emplace_back(SDLK_a);
-  ret->emplace_back(SDLK_b);
-  ret->emplace_back(SDLK_c);
-  ret->emplace_back(SDLK_d);
+  ret->emplace_back(SDLK_q);
+	ret->emplace_back(SDLK_w);
   ret->emplace_back(SDLK_e);
+  ret->emplace_back(SDLK_r);
+  ret->emplace_back(SDLK_t);
+  ret->emplace_back(SDLK_y);
+  ret->emplace_back(SDLK_u);
+  ret->emplace_back(SDLK_i);
+  ret->emplace_back(SDLK_o);
+  ret->emplace_back(SDLK_p);
+  ret->emplace_back(SDLK_a);
+  ret->emplace_back(SDLK_s);
+  ret->emplace_back(SDLK_d);
   ret->emplace_back(SDLK_f);
   ret->emplace_back(SDLK_g);
   ret->emplace_back(SDLK_h);
-  ret->emplace_back(SDLK_i);
   ret->emplace_back(SDLK_j);
   ret->emplace_back(SDLK_k);
   ret->emplace_back(SDLK_l);
-  ret->emplace_back(SDLK_m);
-  ret->emplace_back(SDLK_n);
-  ret->emplace_back(SDLK_o);
-  ret->emplace_back(SDLK_p);
-  ret->emplace_back(SDLK_q);
-  ret->emplace_back(SDLK_r);
-  ret->emplace_back(SDLK_s);
-  ret->emplace_back(SDLK_t);
-  ret->emplace_back(SDLK_u);
-  ret->emplace_back(SDLK_v);
-  ret->emplace_back(SDLK_w);
-  ret->emplace_back(SDLK_x);
-  ret->emplace_back(SDLK_y);
   ret->emplace_back(SDLK_z);
+  ret->emplace_back(SDLK_x);
+  ret->emplace_back(SDLK_c);
+  ret->emplace_back(SDLK_v);
+  ret->emplace_back(SDLK_b);
+  ret->emplace_back(SDLK_n);
+  ret->emplace_back(SDLK_m);
 
   assert(ret->size() == COUNT_PAIRS * 2);
 
@@ -47,10 +47,33 @@ Load< std::vector< SDL_Keycode > > keys(
 
 });
 
-Load< std::vector< Sound::Sample *> const > sounds(
-  LoadTagLate, []() -> std::vector< Sound::Sample *> const * {
-	std::vector< Sound::Sample *> *ret =
-    new std::vector< Sound::Sample * >();
+Load< std::unordered_map< SDL_Keycode, Sound::Sample const *> const > alphas(
+  LoadTagLate, []() -> std::unordered_map< SDL_Keycode, Sound::Sample const *> const * {
+	std::unordered_map< SDL_Keycode, Sound::Sample const *> *ret =
+    new std::unordered_map< SDL_Keycode, Sound::Sample const *>();
+
+  for (SDL_Keycode a = SDLK_a; a <= SDLK_z; a++) {
+    std::string s = "sounds/alpha/";
+    s.push_back((char) a);
+    s.append(".wav");
+    ret->emplace(a, new Sound::Sample(data_path(s)));
+  }
+
+  return ret;
+
+});
+
+Load< Sound::Sample const > snd_remaining(
+  LoadTagLate, []() -> Sound::Sample const * {
+
+  return new Sound::Sample(data_path("sounds/remain.wav"));
+
+});
+
+Load< std::vector< Sound::Sample const *> const > sounds(
+  LoadTagLate, []() -> std::vector< Sound::Sample const *> const * {
+	std::vector< Sound::Sample const *> *ret =
+    new std::vector< Sound::Sample const * >();
 
   std::array< float, 7 > const freqs = {
     261.63f,
@@ -140,6 +163,10 @@ Load< std::vector< Sound::Sample *> const > sounds(
 
 });
 
+//Load< Sound::Sample const > sndfb_correct(LoadTagLate, []() -> Sound::Sample const * {
+//  Sound::Sample const *ret =
+//}
+
 MatchMode::MatchMode() {
 
   std::mt19937 mt;
@@ -175,12 +202,20 @@ MatchMode::handle_event(
     // In memory phase, just play stuff
       if (!countdown_start) countdown_start = true;
       auto cmap_it = cmap.find(evt.key.keysym.sym);
-      Sound::play(*(cmap_it->second), 1.0f, 0.0f);
+      if (cmap_it != cmap.end()) Sound::play(*(cmap_it->second), 1.0f, 0.0f);
       return true;
     }
     // In recall phase
     SDL_Keycode ks = evt.key.keysym.sym;
     std::cout << ks << std::endl;
+
+    // check for spacebar
+    if (ks == SDLK_SPACE) {
+      remain_it = keys->begin();
+      remain_curr_sound = Sound::play(*snd_remaining);
+      remain_getting = true;
+    }
+
     auto cmap_it = cmap.find(ks);
     if (cmap_it != cmap.end()) {
       if (!curr_held_active) { // This is the first key, held down
@@ -220,11 +255,24 @@ MatchMode::handle_event(
 
 void MatchMode::update(float elapsed) {
 
-  if (countdown_start && countdown > 0.0f) {
-    countdown -= elapsed;
+  if (countdown_start) {
+    if (countdown > 0.0f) countdown -= elapsed;
+    if (countdown < 0.0f) countdown_start = false;
   }
-  if (countdown < 0.0f && countdown_start) {
-    countdown_start = false;
+
+  if (remain_getting) {
+    if (remain_curr_sound->stopped) {
+      if (remain_it != keys->end()) {
+        while (cmap.find(*remain_it) == cmap.end()) {
+          remain_it++;
+        }
+        remain_curr_sound = Sound::play(*(alphas->at(*remain_it)));
+        remain_it++;
+      }
+      else {
+        remain_getting = false;
+      }
+    }
   }
 
 }
