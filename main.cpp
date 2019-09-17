@@ -2,7 +2,7 @@
 #include "Mode.hpp"
 
 //Starting mode:
-#include "MatchMode.hpp"
+#include "PreambleMode.hpp"
 
 //Deal with calling resource loading functions:
 #include "Load.hpp"
@@ -99,7 +99,7 @@ int main(int argc, char **argv) {
 	call_load_functions();
 
 	//------------ create game mode + make current --------------
-	Mode::set_current(std::make_shared< MatchMode >());
+	Mode::set_current(std::make_shared< PreambleMode >());
 
 	//------------ main loop ------------
 
