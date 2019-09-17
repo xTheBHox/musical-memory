@@ -1,20 +1,24 @@
-# (TODO: your game's title)
+# Musical Memory
 
-Author: (TODO: your name)
+Author: Benjamin Huang
 
-Design: (TODO: In two sentences or fewer, describe what is new and interesting about your game.)
+Design: This is an audio-only game. You could play it even if you were visually impaired, as long as you were familiar with keyboard layout.
 
 Screen Shot:
 
-![Screen Shot](screenshot.png)
+Sorry, there are no graphics.
 
 How To Play:
 
-(TODO: describe the controls and (if needed) goals/strategy.)
+Make sure you turn audio on.
+
+In this game, you match sounds. Each letter on the keyboard corresponds to a sound. Sounds vary in pitch and tone.
+To match two sounds, hold the first key down and press the second key. Press the spacebar to hear remaining keys.
+Before the game starts, you have 15 seconds to memorize the sounds, and pressing keys does not count towards your try count.
 
 Sources:
 
 All speech was obtained using https://www.text2speech.org/
-(TODO: fill in information about the sources of any **artwork** or **sounds** you used in the game that you did not create yourself. Feel free to also credit yourself for things you did make.)
+Sounds are generated using code synthesis.
 
 This game was built with [NEST](NEST.md).
